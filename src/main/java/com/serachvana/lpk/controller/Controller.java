@@ -1,16 +1,20 @@
 package com.serachvana.lpk.controller;
 
 import com.serachvana.lpk.Shajt;
+//import javneta.util.HashMap;
+import jdk.nashorn.internal.ir.ReturnNode;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 public class Controller {
@@ -18,6 +22,7 @@ public class Controller {
     private static final Decoder[] DECODERS = new Decoder[] {
             new Base64Decoder(),
             new RuneDecoder(),
+            new ThirdDecode(),
             new NullDecoder()
     };
 
@@ -58,6 +63,30 @@ public class Controller {
         public String decodeSingle(String s) {
             return StringUtils.newStringUtf8(Base64.decodeBase64(s));
         }
+    }
+
+    public static class ThirdDecode implements Decoder {
+
+        @Override
+        public String decode(String value) {
+            String decodes = decodeSingle(value);
+            StringBuilder sb = new StringBuilder();
+            byte[] array = new byte[decodes.length()];
+            for (int i=0; i<decodes.length(); i++) {
+                array[i] = (byte) (decodes.charAt(i) + ('a' - '0'));
+            }
+            String dec = null;
+            try {
+                dec = new String(array, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return dec;
+        }
+        public String decodeSingle(String s) {
+            return StringUtils.newStringUtf8(Base64.decodeBase64(s));
+        }
+
     }
 
     public static class RuneDecoder implements Decoder {
@@ -161,7 +190,7 @@ public class Controller {
 
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < value.length(); i++) {
-                int result = (int) value.charAt(i) - (int) 'ᚫ' + (int) 'a';
+                int result = (int) value.charAt(i) - (int) 'ᚠ' + (int) 'a';
                 builder.append((char) result);
 //                if (translated == null) {
 //                    missing.add(c);
