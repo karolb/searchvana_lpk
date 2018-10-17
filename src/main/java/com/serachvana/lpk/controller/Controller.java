@@ -18,6 +18,7 @@ public class Controller {
     private static final Decoder[] DECODERS = new Decoder[] {
             new Base64Decoder(),
             new RuneDecoder(),
+            new Base64Decoder(),
             new NullDecoder()
     };
 
@@ -161,7 +162,7 @@ public class Controller {
 
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < value.length(); i++) {
-                int result = (int) value.charAt(i) - (int) 'ᚫ' + (int) 'a';
+                int result = (int) value.charAt(i) - (int) 'ᚠ' + (int) 'a';
                 builder.append((char) result);
 //                if (translated == null) {
 //                    missing.add(c);
